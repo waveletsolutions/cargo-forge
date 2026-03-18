@@ -1,5 +1,5 @@
 [workspace]
-members = [".", "forge-core", "xtask"]
+members = [".", "cargo-forge-core", "xtask"]
 default-members = ["."]
 resolver = "2"
 
@@ -23,4 +23,4 @@ name = "cargo-forge"
 path = "src/main.rs"
 
 [dependencies]
-forge-core = { path = "forge-core" }
+cargo-forge-core = { path = "cargo-forge-core" }

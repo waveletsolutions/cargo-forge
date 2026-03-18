@@ -68,7 +68,19 @@ checksum = "843867be96c8daad0d758b57df9392b6d8d271134fce549de6ce169ff98a92af"
 name = "cargo-forge"
 version = "0.1.0"
 dependencies = [
- "forge-core",
+ "cargo-forge-core",
+]
+
+[[package]]
+name = "cargo-forge-core"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "colored",
+ "serde",
+ "toml",
+ "which",
 ]
 
 [[package]]
@@ -147,18 +159,6 @@ checksum = "39cab71617ae0d63f51a36d69f866391735b51691dbda63cf6f96d042b63efeb"
 dependencies = [
  "libc",
  "windows-sys 0.61.2",
-]
-
-[[package]]
-name = "forge-core"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "clap",
- "colored",
- "serde",
- "toml",
- "which",
 ]
 
 [[package]]
@@ -554,5 +554,5 @@ dependencies = [
 name = "xtask"
 version = "0.1.0"
 dependencies = [
- "forge-core",
+ "cargo-forge-core",
 ]

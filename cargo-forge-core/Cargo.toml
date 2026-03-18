@@ -1,5 +1,5 @@
 [package]
-name = "forge-core"
+name = "cargo-forge-core"
 version = "0.1.0"
 edition = "2021"
 authors = ["Eric Ratliff <eric@waveletsolutions.com>"]

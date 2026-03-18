@@ -9,4 +9,4 @@ name = "xtask"
 path = "src/main.rs"
 
 [dependencies]
-forge-core = { path = "../forge-core" }
+cargo-forge-core = { path = "../cargo-forge-core" }

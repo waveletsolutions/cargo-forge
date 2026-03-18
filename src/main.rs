@@ -9,5 +9,5 @@
 //! All logic lives in forge-core.
 
 fn main() {
-    forge_core::run();
+    cargo_forge_core::run();
 }
