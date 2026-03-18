@@ -23,4 +23,4 @@ name = "cargo-forge"
 path = "src/main.rs"
 
 [dependencies]
-cargo-forge-core = { path = "cargo-forge-core" }
+cargo-forge-core = { version = "0.1.0", path = "cargo-forge-core" }
