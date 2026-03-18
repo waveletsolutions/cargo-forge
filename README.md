@@ -134,4 +134,12 @@ Then `cargo xtask build` and `cargo forge build` both work, reading the same
 
 ## License
 
-MIT
+Licensed under either of
+
+- [MIT License](LICENSE-MIT)
+- [Apache License, Version 2.0](LICENSE-APACHE)
+
+at your option.
+
+Copyright 2026 [Wavelet Solutions LLC](https://waveletsolutions.com) /
+Artisan Technologies R&D division.

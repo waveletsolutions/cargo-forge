@@ -81,7 +81,7 @@ fn build_native(
     target: &TargetConfig,
     artifacts: &Path,
 ) -> Result<()> {
-    header(&format!("{} (native)", target.platform));
+    header(&format!("{} (native)", target.display_name()));
     info("Building...");
 
     let status = Command::new("cargo")

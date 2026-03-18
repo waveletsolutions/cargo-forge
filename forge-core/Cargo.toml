@@ -2,9 +2,15 @@
 name = "forge-core"
 version = "0.1.0"
 edition = "2021"
-authors = ["Eric Ratliff <eric@nxlearn.net>"]
+authors = ["Eric Ratliff <eric@waveletsolutions.com>"]
 description = "Core library for cargo-forge -- cross-platform Rust release builds"
-license = "MIT"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/waveletsolutions/cargo-forge"
+homepage = "https://cargo-forge.dev"
+documentation = "https://docs.rs/forge-core"
+readme = "../README.md"
+keywords = ["cross-compile", "build", "release", "zig", "cargo"]
+categories = ["development-tools::build-utils"]
 publish = true
 
 [dependencies]

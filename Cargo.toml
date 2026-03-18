@@ -7,12 +7,16 @@ resolver = "2"
 name = "cargo-forge"
 version = "0.1.0"
 edition = "2021"
-authors = ["Eric Ratliff <eric@nxlearn.net>"]
+authors = ["Eric Ratliff <eric@waveletsolutions.com>"]
 description = "Turn-key cross-platform release builds for Rust projects"
-license = "MIT"
-repository = "https://nxgit.dev/nexus/cargo-forge"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/waveletsolutions/cargo-forge"
+homepage = "https://cargo-forge.dev"
+documentation = "https://docs.rs/cargo-forge"
+readme = "README.md"
 keywords = ["cross-compile", "build", "release", "zig", "cargo"]
 categories = ["development-tools::build-utils"]
+exclude = ["release-artifacts/", "forge.toml"]
 
 [[bin]]
 name = "cargo-forge"

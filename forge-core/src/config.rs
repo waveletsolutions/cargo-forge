@@ -92,6 +92,19 @@ impl TargetConfig {
         }
     }
 
+    /// Human-readable display name for this platform.
+    pub fn display_name(&self) -> &str {
+        match self.platform.as_str() {
+            "freebsd-x86_64"  => "FreeBSD x86_64",
+            "linux-x86_64"    => "Linux x86_64",
+            "linux-aarch64"   => "Linux aarch64",
+            "windows-x86_64"  => "Windows x86_64",
+            "macos-x86_64"    => "macOS x86_64",
+            "macos-aarch64"   => "macOS aarch64",
+            other             => other,
+        }
+    }
+
     /// Archive extension -- from config or auto-detected.
     pub fn archive_ext(&self) -> &str {
         if let Some(ref a) = self.archive {
