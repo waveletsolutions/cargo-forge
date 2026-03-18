@@ -118,11 +118,26 @@ fn check_all(config: &ForgeConfig, verbose: bool) -> Result<bool> {
                     "cargo-forge {} is installed but this project requires >= {}",
                     current, min
                 ));
-                println!("       cargo install cargo-forge");
+                println!("       cargo install forge-release");
                 missing += 1;
             } else {
                 ok(&format!("cargo-forge {} (>= {} required)", current, min));
             }
+        }
+    }
+
+    // Host platform note
+    if verbose {
+        println!();
+        match host {
+            HostOs::Windows => ok("Windows host -- produces FreeBSD, Linux, and Windows binaries"),
+            HostOs::FreeBsd => ok("FreeBSD host -- produces FreeBSD (native), Linux, and Windows binaries"),
+            HostOs::Linux   => {
+                ok("Linux host -- produces Linux (native) and Windows binaries");
+                warn("FreeBSD cross-compilation from Linux is not supported.");
+                println!("       Build the FreeBSD binary on a FreeBSD machine or from Windows.");
+            }
+            _ => {}
         }
     }
 

@@ -11,6 +11,17 @@ use colored::Colorize;
 use crate::platform::{cmd_exists, exec, find_managed_zig, run_captured, HostOs};
 use crate::workspace;
 
+/// Returns false for cross-compile combinations that are known not to work.
+/// FreeBSD cross-compilation from Linux requires FreeBSD system libraries
+/// that zig cannot provide -- it only works natively or from Windows/macOS.
+fn is_supported_cross(host: &str, target_platform: &str) -> bool {
+    match (host, target_platform) {
+        ("linux", "freebsd-x86_64") => false,
+        ("linux", "freebsd-aarch64") => false,
+        _ => true,
+    }
+}
+
 pub fn run(workspace: &Path, config: &ForgeConfig, suffix: Option<&str>) -> Result<()> {
     let host = HostOs::detect();
 
@@ -45,6 +56,13 @@ pub fn run(workspace: &Path, config: &ForgeConfig, suffix: Option<&str>) -> Resu
     for t in &config.forge.target {
         if t.is_native(host.as_str()) {
             build_native(workspace, config, &version, t, &artifacts)?;
+        } else if !is_supported_cross(host.as_str(), &t.platform) {
+            warn(&format!(
+                "Skipping {} -- cross-compilation to FreeBSD from Linux is not supported.",
+                t.platform
+            ));
+            println!("       Build the FreeBSD binary on a FreeBSD machine or from Windows.");
+            println!();
         } else {
             build_cross(workspace, config, &version, t, &artifacts)?;
         }
