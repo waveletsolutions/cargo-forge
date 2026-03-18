@@ -97,7 +97,7 @@ impl TargetConfig {
         match self.platform.as_str() {
             "freebsd-x86_64"  => "FreeBSD x86_64",
             "linux-x86_64"    => "Linux x86_64",
-            "linux-aarch64"   => "Linux aarch64",
+            "linux-aarch64"   => "Linux ARM64 (aarch64)",
             "windows-x86_64"  => "Windows x86_64",
             "macos-x86_64"    => "macOS x86_64",
             "macos-aarch64"   => "macOS aarch64",

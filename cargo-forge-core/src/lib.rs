@@ -36,6 +36,7 @@ mod fix;
 mod build;
 mod clean;
 mod init;
+mod target;
 
 use anyhow::Result;
 use clap::{Parser, Subcommand};
@@ -82,6 +83,27 @@ enum Commands {
     Build,
     /// Remove cross-compile artifacts and release-artifacts/
     Clean,
+    /// Manage build targets in forge.toml
+    Target {
+        #[command(subcommand)]
+        action: TargetAction,
+    },
+}
+
+#[derive(Subcommand, Debug)]
+enum TargetAction {
+    /// List configured targets and available platforms
+    List,
+    /// Add a platform target to forge.toml
+    Add {
+        /// Platform to add (e.g. linux-aarch64, windows-x86_64)
+        platform: String,
+    },
+    /// Remove a platform target from forge.toml
+    Remove {
+        /// Platform to remove (e.g. freebsd-x86_64)
+        platform: String,
+    },
 }
 
 // ---------------------------------------------------------------------------
@@ -112,6 +134,7 @@ pub fn run() {
         Commands::Fix   => run_fix(),
         Commands::Build => run_build(cli.suffix.as_deref()),
         Commands::Clean => run_clean(),
+        Commands::Target { action } => run_target(action),
     };
 
     if let Err(e) = result {
@@ -152,6 +175,15 @@ fn run_build(suffix: Option<&str>) -> Result<()> {
     }
 
     build::run(&workspace, &config, suffix)
+}
+
+fn run_target(action: TargetAction) -> Result<()> {
+    let workspace = workspace::find_root()?;
+    match action {
+        TargetAction::List           => target::list(&workspace),
+        TargetAction::Add { platform }    => target::add(&workspace, &platform),
+        TargetAction::Remove { platform } => target::remove(&workspace, &platform),
+    }
 }
 
 fn run_clean() -> Result<()> {
