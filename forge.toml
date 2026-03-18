@@ -1,0 +1,17 @@
+[forge]
+binary       = "cargo-forge"
+version_from = "Cargo.toml"
+
+[[forge.target]]
+platform = "freebsd-x86_64"
+
+[[forge.target]]
+platform = "linux-x86_64"
+
+[[forge.target]]
+platform = "windows-x86_64"
+archive = "zip"
+
+[forge.deps]
+zig = true
+zip = true

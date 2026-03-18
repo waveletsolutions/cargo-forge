@@ -1,0 +1,21 @@
+[package]
+name = "forge-core"
+version = "0.1.0"
+edition = "2021"
+authors = ["Eric Ratliff <eric@nxlearn.net>"]
+description = "Core library for cargo-forge -- cross-platform Rust release builds"
+license = "MIT"
+publish = true
+
+[dependencies]
+# CLI
+clap = { version = "4.4", features = ["derive"] }
+# Error handling
+anyhow = "1.0"
+# Colors
+colored = "2.1"
+# Command detection
+which = "5.0"
+# TOML config parsing
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.8"

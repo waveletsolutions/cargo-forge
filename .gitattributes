@@ -1,0 +1,27 @@
+# Auto-detect text files and normalize line endings
+* text=auto
+
+# Rust source
+*.rs text diff=rust
+*.toml text eol=lf
+
+# Shell scripts must keep LF even on Windows
+*.sh text eol=lf
+
+# Batch scripts must keep CRLF
+*.bat text eol=crlf
+
+# C/C++ templates
+*.h text
+*.cpp text
+*.ino text
+
+# Documentation
+*.md text diff=markdown
+
+# Engineering documents -- binary, do not diff or merge
+docs/*.docx binary
+docs/*.xlsx binary
+
+# Binary / generated -- do not diff
+Cargo.lock linguist-generated=true

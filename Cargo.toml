@@ -1,0 +1,22 @@
+[workspace]
+members = [".", "forge-core", "xtask"]
+default-members = ["."]
+resolver = "2"
+
+[package]
+name = "cargo-forge"
+version = "0.1.0"
+edition = "2021"
+authors = ["Eric Ratliff <eric@nxlearn.net>"]
+description = "Turn-key cross-platform release builds for Rust projects"
+license = "MIT"
+repository = "https://nxgit.dev/nexus/cargo-forge"
+keywords = ["cross-compile", "build", "release", "zig", "cargo"]
+categories = ["development-tools::build-utils"]
+
+[[bin]]
+name = "cargo-forge"
+path = "src/main.rs"
+
+[dependencies]
+forge-core = { path = "forge-core" }
