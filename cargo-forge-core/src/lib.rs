@@ -46,14 +46,20 @@ use clap::{Parser, Subcommand};
 
 #[derive(Parser, Debug)]
 #[command(
-    name = "forge",
+    name = "cargo-forge",
     bin_name = "cargo forge",
+    version = concat!(
+        env!("CARGO_PKG_VERSION"),
+        "\nCopyright (c) 2026 Wavelet Solutions LLC",
+        "\nhttps://cargo-forge.dev | https://waveletsolutions.com"
+    ),
     about = "Turn-key cross-platform release builds for Rust projects",
     long_about = "Builds release binaries for all configured platforms using\n\
                   cargo-zigbuild + zig as a universal cross-linker.\n\
                   No VMs, no containers, no root required.\n\n\
                   First time: cargo forge init && cargo forge fix\n\
-                  Every release: cargo forge build"
+                  Every release: cargo forge build",
+    after_help = "Copyright (c) 2026 Wavelet Solutions LLC\nhttps://cargo-forge.dev | https://waveletsolutions.com"
 )]
 struct Cli {
     #[command(subcommand)]
