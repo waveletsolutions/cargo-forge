@@ -5,7 +5,7 @@ resolver = "2"
 
 [package]
 name = "forge-release"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["Eric Ratliff <eric@waveletsolutions.com>"]
 description = "Turn-key cross-platform release builds for Rust projects"
@@ -23,4 +23,4 @@ name = "cargo-forge"
 path = "src/main.rs"
 
 [dependencies]
-cargo-forge-core = { version = "0.1.0", path = "cargo-forge-core" }
+cargo-forge-core = { version = "0.1.1", path = "cargo-forge-core" }

@@ -5,7 +5,7 @@ use std::path::Path;
 
 use crate::config::ForgeConfig;
 use crate::output::*;
-use crate::platform::{cmd_exists, run_captured, HostOs};
+use crate::platform::{cmd_exists, find_managed_zig, run_captured, HostOs};
 
 /// Run check with output. Returns true if all deps satisfied.
 pub fn run(_workspace: &Path, config: &ForgeConfig) -> Result<bool> {
@@ -29,15 +29,22 @@ fn check_all(config: &ForgeConfig, verbose: bool) -> Result<bool> {
     let host = HostOs::detect();
     let mut missing = 0;
 
-    // zig
+    // zig -- check system PATH first, then cargo-forge managed install
     if config.forge.deps.zig {
-        if cmd_exists("zig") {
-            let ver = run_captured("zig", &["version"]).unwrap_or_default();
+        let zig_ver = if cmd_exists("zig") {
+            run_captured("zig", &["version"]).ok()
+        } else if let Some(managed) = find_managed_zig() {
+            run_captured(managed.to_str().unwrap_or("zig"), &["version"]).ok()
+        } else {
+            None
+        };
+        if let Some(ver) = zig_ver {
             if verbose { ok(&format!("zig {}", ver)); }
         } else {
             if verbose {
                 warn("zig -- not found");
-                println!("       {}", zig_install_hint(host));
+                println!("       run: cargo forge fix  (auto-downloads zig)");
+                println!("       or:  {}", zig_install_hint(host));
             }
             missing += 1;
         }

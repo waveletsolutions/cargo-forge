@@ -8,7 +8,7 @@ use std::process::Command;
 use crate::config::{ForgeConfig, TargetConfig};
 use crate::output::*;
 use colored::Colorize;
-use crate::platform::{exec, run_captured, HostOs};
+use crate::platform::{cmd_exists, exec, find_managed_zig, run_captured, HostOs};
 use crate::workspace;
 
 pub fn run(workspace: &Path, config: &ForgeConfig, suffix: Option<&str>) -> Result<()> {
@@ -110,14 +110,21 @@ fn build_cross(
     artifacts: &Path,
 ) -> Result<()> {
     let triple = target.triple().unwrap();
-    header(&format!("{} (via cargo-zigbuild)", target.platform));
+    header(&format!("{} (via cargo-zigbuild)", target.display_name()));
     info("Building...");
 
-    let status = Command::new("cargo")
-        .args(["zigbuild", "--release", "--target", triple])
-        .current_dir(workspace)
-        .status()
-        .context("Failed to run cargo zigbuild")?;
+    // If zig is not on PATH but cargo-forge manages a local install, inject it
+    let mut cmd = Command::new("cargo");
+    cmd.args(["zigbuild", "--release", "--target", triple]);
+    cmd.current_dir(workspace);
+    if !cmd_exists("zig") {
+        if let Some(managed_zig) = find_managed_zig() {
+            let zig_dir = managed_zig.parent().unwrap().to_path_buf();
+            let current_path = std::env::var("PATH").unwrap_or_default();
+            cmd.env("PATH", format!("{}:{}", zig_dir.display(), current_path));
+        }
+    }
+    let status = cmd.status().context("Failed to run cargo zigbuild")?;
     if !status.success() {
         bail!("cargo zigbuild --release --target {} failed", triple);
     }
@@ -207,18 +214,36 @@ fn generate_checksums(artifacts: &Path) -> Result<()> {
     let prev = std::env::current_dir()?;
     std::env::set_current_dir(artifacts)?;
 
-    let output = if run_captured("sha256sum", &["--version"]).is_ok() {
+    // Generate checksums -- use the right tool for each platform
+    let checksum_output = if cfg!(windows) {
+        // PowerShell Get-FileHash is built into Windows
+        let mut lines = String::new();
+        for f in &files {
+            let ps_cmd = format!(
+                "(Get-FileHash -Algorithm SHA256 '{}').Hash.ToLower() + '  {}'",
+                f, f
+            );
+            let out = Command::new("powershell")
+                .args(["-NoProfile", "-Command", &ps_cmd])
+                .output()?;
+            lines.push_str(&String::from_utf8_lossy(&out.stdout).trim().to_string());
+            lines.push('\n');
+        }
+        lines
+    } else if run_captured("sha256sum", &["--version"]).is_ok() {
         let mut args = vec!["--"];
         for f in &files { args.push(f.as_str()); }
-        Command::new("sha256sum").args(&args).output()?
+        let out = Command::new("sha256sum").args(&args).output()?;
+        String::from_utf8_lossy(&out.stdout).to_string()
     } else {
         let mut args = vec!["-a", "256", "--"];
         for f in &files { args.push(f.as_str()); }
-        Command::new("shasum").args(&args).output()?
+        let out = Command::new("shasum").args(&args).output()?;
+        String::from_utf8_lossy(&out.stdout).to_string()
     };
 
-    fs::write("SHA256SUMS", &output.stdout)?;
-    print!("{}", String::from_utf8_lossy(&output.stdout));
+    fs::write("SHA256SUMS", checksum_output.as_bytes())?;
+    print!("{}", checksum_output);
 
     std::env::set_current_dir(prev)?;
     Ok(())
