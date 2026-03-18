@@ -88,7 +88,13 @@ pub fn list(workspace: &Path) -> Result<()> {
     println!("  Available platforms:");
     for p in PLATFORMS {
         let is_configured = configured.iter().any(|c| c == p.id);
-        let is_native = p.id.starts_with(host.as_str());
+        let host_arch = match std::env::consts::ARCH {
+            "x86_64"  => "x86_64",
+            "aarch64" => "aarch64",
+            _         => "",
+        };
+        let native_platform = format!("{}-{}", host.as_str(), host_arch);
+        let is_native = p.id == native_platform;
         let marker = if is_configured { format_check() } else { "  ".to_string() };
         let native_tag = if is_native { " (this machine)" } else { "" };
         println!(
