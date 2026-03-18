@@ -119,7 +119,14 @@ impl TargetConfig {
 
     /// Whether this platform is the native host.
     pub fn is_native(&self, host: &str) -> bool {
-        self.platform.starts_with(host)
+        // Must match both OS and architecture -- linux-aarch64 is not native on linux-x86_64
+        let host_arch = match std::env::consts::ARCH {
+            "x86_64"  => "x86_64",
+            "aarch64" => "aarch64",
+            _         => return false,
+        };
+        let native_platform = format!("{}-{}", host, host_arch);
+        self.platform == native_platform
     }
 }
 
